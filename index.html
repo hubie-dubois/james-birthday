@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>James Right Now</title>
+    <meta
+      name="description"
+      content="A live single-page website tracking exactly how old James is right now."
+    />
+    <meta name="theme-color" content="#143642" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="background" aria-hidden="true">
+      <div class="background-orb orb-one"></div>
+      <div class="background-orb orb-two"></div>
+      <div class="background-grid"></div>
+    </div>
+
+    <main class="page-shell">
+      <section class="hero panel">
+        <div class="hero-copy">
+          <p class="eyebrow">James Right Now</p>
+          <p class="birth-note">Born July 24, 2024 at 11:41 AM CST</p>
+          <h1>A living clock for James' first eighteen years.</h1>
+          <p class="hero-text">
+            This page keeps a precise running count of James' age, shows where he
+            is on the journey to eighteen, and stays intentionally simple so it
+            can hold up for years without depending on any frameworks or third
+            party services.
+          </p>
+        </div>
+
+        <div class="hero-timer">
+          <p class="timer-label">Current age</p>
+          <p class="age-summary" id="ageSummary" role="timer">Calculating...</p>
+          <p class="age-detail" id="ageDetail">Loading the live counter.</p>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="Live age highlights">
+        <article class="panel stat-card stat-card-emphasis">
+          <p class="stat-label">Days on Earth</p>
+          <p class="stat-value" id="daysAlive">0</p>
+          <p class="stat-copy">Whole days completed since birth.</p>
+        </article>
+
+        <article class="panel stat-card">
+          <p class="stat-label">Next Birthday</p>
+          <p class="stat-value stat-value-small" id="nextBirthdayDate">July 24</p>
+          <p class="stat-copy" id="nextBirthdayCountdown">Calculating...</p>
+        </article>
+
+        <article class="panel stat-card">
+          <p class="stat-label">Countdown To 18</p>
+          <p class="stat-value" id="daysToAdult">0</p>
+          <p class="stat-copy" id="adultCountdown">Days remaining.</p>
+        </article>
+
+        <article class="panel stat-card">
+          <p class="stat-label">Reference Moment</p>
+          <p class="stat-value stat-value-small">11:41 AM CST</p>
+          <p class="stat-copy">Locked to July 24, 2024 at UTC-06:00.</p>
+        </article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel progress-panel">
+          <div class="section-heading">
+            <p class="eyebrow">Journey To 18</p>
+            <h2>The long arc of the site.</h2>
+          </div>
+
+          <div class="progress-shell" aria-hidden="true">
+            <div class="progress-track">
+              <div class="progress-fill" id="lifeProgress"></div>
+            </div>
+          </div>
+
+          <p class="progress-copy" id="lifeProgressText">
+            Measuring James' progress from birth to adulthood.
+          </p>
+
+          <div class="milestone-list" id="milestoneList" aria-label="Milestones"></div>
+        </article>
+
+        <article class="panel totals-panel">
+          <div class="section-heading">
+            <p class="eyebrow">In The Numbers</p>
+            <h2>How that time adds up.</h2>
+          </div>
+
+          <div class="totals-grid">
+            <div class="total-item">
+              <p class="total-label">Total Months</p>
+              <p class="total-value" id="totalMonths">0</p>
+            </div>
+            <div class="total-item">
+              <p class="total-label">Total Weeks</p>
+              <p class="total-value" id="totalWeeks">0</p>
+            </div>
+            <div class="total-item">
+              <p class="total-label">Total Hours</p>
+              <p class="total-value" id="totalHours">0</p>
+            </div>
+            <div class="total-item">
+              <p class="total-label">Total Minutes</p>
+              <p class="total-value" id="totalMinutes">0</p>
+            </div>
+            <div class="total-item">
+              <p class="total-label">Total Seconds</p>
+              <p class="total-value" id="totalSeconds">0</p>
+            </div>
+            <div class="total-item">
+              <p class="total-label">Born</p>
+              <p class="total-value total-value-note">July 24, 2024</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <footer class="site-footer">
+        <p>
+          Built as a lightweight static page so the only thing that really has
+          to keep working is the browser clock.
+        </p>
+      </footer>
+    </main>
+
+    <noscript>
+      <div class="noscript-banner">
+        JavaScript is required for the live counter. James was born on July 24,
+        2024 at 11:41 AM CST.
+      </div>
+    </noscript>
+
+    <script src="script.js"></script>
+  </body>
+</html>
