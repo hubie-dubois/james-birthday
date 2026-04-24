@@ -1,7 +1,8 @@
 const CONFIG = {
   name: "James",
-  birthIso: "2024-07-24T11:41:00-06:00",
-  birthLabel: "July 24, 2024 at 11:41 AM CST",
+  // Chicago was observing daylight saving time on July 24, 2024.
+  birthIso: "2024-07-24T11:41:00-05:00",
+  birthLabel: "July 24, 2024 at 11:41 AM Central Time",
   adulthoodYears: 18,
   milestoneYears: [1, 2, 5, 10, 13, 16, 18],
 };
