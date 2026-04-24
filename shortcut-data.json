@@ -1,0 +1,52 @@
+{
+  "siteTitle": "James Right Now",
+  "sourceUrl": "https://james.hubiedubois.com/",
+  "shortcutDataUrl": "https://james.hubiedubois.com/shortcut-data.json",
+  "name": "James",
+  "birthIso": "2024-07-24T11:41:00-05:00",
+  "birthLabel": "July 24, 2024 at 11:41 AM Central Time",
+  "referenceTimezone": "America/Chicago",
+  "referenceOffset": "-05:00",
+  "birthdayMonthDayTimeSuffix": "-07-24T11:41:00-05:00",
+  "adulthoodYears": 18,
+  "adulthoodIso": "2042-07-24T11:41:00-05:00",
+  "adulthoodLabel": "July 24, 2042",
+  "milestoneYears": [1, 2, 5, 10, 13, 16, 18],
+  "milestones": [
+    {
+      "age": 1,
+      "dateIso": "2025-07-24T11:41:00-05:00",
+      "dateLabel": "July 24, 2025"
+    },
+    {
+      "age": 2,
+      "dateIso": "2026-07-24T11:41:00-05:00",
+      "dateLabel": "July 24, 2026"
+    },
+    {
+      "age": 5,
+      "dateIso": "2029-07-24T11:41:00-05:00",
+      "dateLabel": "July 24, 2029"
+    },
+    {
+      "age": 10,
+      "dateIso": "2034-07-24T11:41:00-05:00",
+      "dateLabel": "July 24, 2034"
+    },
+    {
+      "age": 13,
+      "dateIso": "2037-07-24T11:41:00-05:00",
+      "dateLabel": "July 24, 2037"
+    },
+    {
+      "age": 16,
+      "dateIso": "2040-07-24T11:41:00-05:00",
+      "dateLabel": "July 24, 2040"
+    },
+    {
+      "age": 18,
+      "dateIso": "2042-07-24T11:41:00-05:00",
+      "dateLabel": "July 24, 2042"
+    }
+  ]
+}
