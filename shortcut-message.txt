@@ -1,24 +1,8 @@
-James site data
+James daily update
 
-Name: James
+Generated: April 24, 2026 at 8:44 PM CDT
 Website: https://james.hubiedubois.com/
-Data URL: https://james.hubiedubois.com/shortcut-data.json
 
-Birth label: July 24, 2024 at 11:41 AM Central Time
-Birth ISO: 2024-07-24T11:41:00-05:00
-Reference timezone: America/Chicago
-Reference offset: -05:00
-
-Turns 18 on: July 24, 2042
-18th birthday ISO: 2042-07-24T11:41:00-05:00
-
-Milestone years: 1, 2, 5, 10, 13, 16, 18
-
-Milestones:
-- Age 1: July 24, 2025 (2025-07-24T11:41:00-05:00)
-- Age 2: July 24, 2026 (2026-07-24T11:41:00-05:00)
-- Age 5: July 24, 2029 (2029-07-24T11:41:00-05:00)
-- Age 10: July 24, 2034 (2034-07-24T11:41:00-05:00)
-- Age 13: July 24, 2037 (2037-07-24T11:41:00-05:00)
-- Age 16: July 24, 2040 (2040-07-24T11:41:00-05:00)
-- Age 18: July 24, 2042 (2042-07-24T11:41:00-05:00)
+Current age: 1 year, 9 months, 0 days
+Next milestone: age 2 on July 24, 2026
+Days until next milestone: 90

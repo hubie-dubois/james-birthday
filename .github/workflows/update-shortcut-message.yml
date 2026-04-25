@@ -1,0 +1,35 @@
+name: Update Shortcut Message
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 12 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-shortcut-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Generate shortcut message
+        run: node scripts/generate-shortcut-message.mjs > shortcut-message.txt
+
+      - name: Commit updated shortcut message
+        run: |
+          if git diff --quiet -- shortcut-message.txt; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add shortcut-message.txt
+          git commit -m "Update shortcut message"
+          git push
