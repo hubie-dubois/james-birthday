@@ -1,8 +1,11 @@
 James daily update
 
-Generated: April 24, 2026 at 8:44 PM CDT
+Generated: April 24, 2026 at 8:59 PM CDT
 Website: https://james.hubiedubois.com/
 
-Current age: 1 year, 9 months, 0 days
+Current age in days: 639 days
+Current age in months: 21 months
+Current age in years and months: 1 year, 9 months
+Current age full: 1 year, 9 months, 0 days
 Next milestone: age 2 on July 24, 2026
-Days until next milestone: 90
+Next milestone is 90 days away

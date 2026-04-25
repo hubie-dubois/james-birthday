@@ -88,6 +88,10 @@ function formatAge(parts) {
   return `${pluralize(parts.years, "year")}, ${pluralize(parts.months, "month")}, ${pluralize(parts.days, "day")}`;
 }
 
+function formatYearsAndMonths(parts) {
+  return `${pluralize(parts.years, "year")}, ${pluralize(parts.months, "month")}`;
+}
+
 function formatDateOnly(date) {
   return new Intl.DateTimeFormat("en-US", {
     month: "long",
@@ -124,6 +128,9 @@ function getNextMilestone(now) {
 const now = new Date();
 const age = getAgeParts(BIRTH_DATE, now);
 const nextMilestone = getNextMilestone(now);
+const totalMs = now.getTime() - BIRTH_DATE.getTime();
+const totalDays = Math.floor(totalMs / DAY);
+const totalMonths = age.years * 12 + age.months;
 const daysUntilMilestone = Math.max(0, Math.floor((nextMilestone.date.getTime() - now.getTime()) / DAY));
 
 const message = [
@@ -132,9 +139,12 @@ const message = [
   `Generated: ${formatTimestamp(now)}`,
   `Website: ${CONFIG.siteUrl}`,
   "",
-  `Current age: ${formatAge(age)}`,
+  `Current age in days: ${pluralize(totalDays, "day")}`,
+  `Current age in months: ${pluralize(totalMonths, "month")}`,
+  `Current age in years and months: ${formatYearsAndMonths(age)}`,
+  `Current age full: ${formatAge(age)}`,
   `Next milestone: age ${nextMilestone.age} on ${formatDateOnly(nextMilestone.date)}`,
-  `Days until next milestone: ${daysUntilMilestone}`,
+  `Next milestone is ${pluralize(daysUntilMilestone, "day")} away`,
 ].join("\n");
 
 process.stdout.write(`${message}\n`);
