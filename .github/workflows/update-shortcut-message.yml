@@ -3,7 +3,14 @@ name: Update Shortcut Message
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 12 * * *"
+    # GitHub-hosted scheduled jobs can be delayed or occasionally miss runner
+    # assignment. Use staggered daily recovery slots and let the update script
+    # commit only the first successful scheduled run for each Chicago date.
+    - cron: "7 10,11,12,13,14,16,18,20 * * *"
+
+concurrency:
+  group: update-shortcut-message
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -14,22 +21,31 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
+      - name: Sync with latest main
+        run: git pull --ff-only origin main
+
       - name: Generate shortcut message
-        run: node scripts/generate-shortcut-message.mjs > shortcut-message.txt
+        env:
+          FORCE_SHORTCUT_UPDATE: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
+        run: node scripts/update-shortcut-message.mjs
 
       - name: Commit updated shortcut message
         run: |
           if git diff --quiet -- shortcut-message.txt; then
+            echo "No shortcut message changes to commit."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add shortcut-message.txt
           git commit -m "Update shortcut message"
-          git push
+          git push origin HEAD:main
