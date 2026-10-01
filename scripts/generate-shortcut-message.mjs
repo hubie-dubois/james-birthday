@@ -1,150 +1,34 @@
-const CONFIG = {
-  name: "James",
-  siteUrl: "https://james.hubiedubois.com/",
-  birthIso: "2024-07-24T11:41:00-05:00",
-  birthLabel: "July 24, 2024 at 11:41 AM Central Time",
-  milestoneYears: [1, 2, 5, 10, 13, 16, 18],
-  timezone: "America/Chicago",
-};
+import { readFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
+import { DAY, createModel, getSnapshot, pluralize, formatAge } from '../age-core.mjs';
 
-const SECOND = 1000;
-const MINUTE = 60 * SECOND;
-const HOUR = 60 * MINUTE;
-const DAY = 24 * HOUR;
+const data = JSON.parse(await readFile(new URL('../shortcut-data.json', import.meta.url), 'utf8'));
+const model = createModel(data);
+const timestamp = new Intl.DateTimeFormat('en-US', {
+  month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
+  timeZone: data.referenceTimezone, timeZoneName: 'short',
+});
 
-const BIRTH_DATE = new Date(CONFIG.birthIso);
-
-if (Number.isNaN(BIRTH_DATE.getTime())) {
-  throw new Error("Invalid birth date.");
-}
-
-function daysInUtcMonth(year, monthIndex) {
-  return new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
-}
-
-function addUtcMonths(date, monthsToAdd) {
-  const absoluteMonths = date.getUTCFullYear() * 12 + date.getUTCMonth() + monthsToAdd;
-  const targetYear = Math.floor(absoluteMonths / 12);
-  const targetMonth = ((absoluteMonths % 12) + 12) % 12;
-  const targetDay = Math.min(date.getUTCDate(), daysInUtcMonth(targetYear, targetMonth));
-
-  return new Date(
-    Date.UTC(
-      targetYear,
-      targetMonth,
-      targetDay,
-      date.getUTCHours(),
-      date.getUTCMinutes(),
-      date.getUTCSeconds(),
-      date.getUTCMilliseconds()
-    )
+export function buildMessage(now = new Date()) {
+  const { age, elapsed, nextMilestone } = getSnapshot(model, now);
+  const lines = [
+    `${data.name} daily update`, '',
+    `Generated: ${timestamp.format(now)}`, `Website: ${data.sourceUrl}`, '',
+  ];
+  if (!age) return `${[...lines, `${data.name} is not born yet.`, `Born: ${data.birthLabel}`].join('\n')}\n`;
+  lines.push(
+    `Current age in days: ${pluralize(Math.floor(elapsed / DAY), 'day')}`,
+    `Current age in months: ${pluralize(age.years * 12 + age.months, 'month')}`,
+    `Current age in years and months: ${pluralize(age.years, 'year')}, ${pluralize(age.months, 'month')}`,
+    `Current age full: ${formatAge(age)}`,
   );
-}
-
-function addUtcYears(date, yearsToAdd) {
-  return addUtcMonths(date, yearsToAdd * 12);
-}
-
-function getAgeParts(start, end) {
-  if (end < start) {
-    return null;
+  if (nextMilestone) {
+    lines.push(`Next milestone: age ${nextMilestone.age} on ${model.formatDate(nextMilestone.date)}`,
+      `Next milestone is ${pluralize(Math.ceil((nextMilestone.date - now) / DAY), 'day')} away`);
+  } else {
+    lines.push('All planned milestones reached.');
   }
-
-  let years = end.getUTCFullYear() - start.getUTCFullYear();
-  let anchor = addUtcYears(start, years);
-
-  if (anchor > end) {
-    years -= 1;
-    anchor = addUtcYears(start, years);
-  }
-
-  let months =
-    (end.getUTCFullYear() - anchor.getUTCFullYear()) * 12 +
-    (end.getUTCMonth() - anchor.getUTCMonth());
-  let monthAnchor = addUtcMonths(anchor, months);
-
-  if (monthAnchor > end) {
-    months -= 1;
-    monthAnchor = addUtcMonths(anchor, months);
-  }
-
-  let remainder = end.getTime() - monthAnchor.getTime();
-  const days = Math.floor(remainder / DAY);
-  remainder -= days * DAY;
-  const hours = Math.floor(remainder / HOUR);
-  remainder -= hours * HOUR;
-  const minutes = Math.floor(remainder / MINUTE);
-  remainder -= minutes * MINUTE;
-  const seconds = Math.floor(remainder / SECOND);
-
-  return { years, months, days, hours, minutes, seconds };
+  return `${lines.join('\n')}\n`;
 }
 
-function pluralize(value, label) {
-  return `${value} ${label}${value === 1 ? "" : "s"}`;
-}
-
-function formatAge(parts) {
-  return `${pluralize(parts.years, "year")}, ${pluralize(parts.months, "month")}, ${pluralize(parts.days, "day")}`;
-}
-
-function formatYearsAndMonths(parts) {
-  return `${pluralize(parts.years, "year")}, ${pluralize(parts.months, "month")}`;
-}
-
-function formatDateOnly(date) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(date);
-}
-
-function formatTimestamp(date) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    timeZone: CONFIG.timezone,
-    timeZoneName: "short",
-  }).format(date);
-}
-
-function getNextMilestone(now) {
-  for (const year of CONFIG.milestoneYears) {
-    const date = addUtcYears(BIRTH_DATE, year);
-    if (date > now) {
-      return { age: year, date };
-    }
-  }
-
-  const finalAge = CONFIG.milestoneYears[CONFIG.milestoneYears.length - 1];
-  return { age: finalAge, date: addUtcYears(BIRTH_DATE, finalAge) };
-}
-
-const now = new Date();
-const age = getAgeParts(BIRTH_DATE, now);
-const nextMilestone = getNextMilestone(now);
-const totalMs = now.getTime() - BIRTH_DATE.getTime();
-const totalDays = Math.floor(totalMs / DAY);
-const totalMonths = age.years * 12 + age.months;
-const daysUntilMilestone = Math.max(0, Math.floor((nextMilestone.date.getTime() - now.getTime()) / DAY));
-
-const message = [
-  "James daily update",
-  "",
-  `Generated: ${formatTimestamp(now)}`,
-  `Website: ${CONFIG.siteUrl}`,
-  "",
-  `Current age in days: ${pluralize(totalDays, "day")}`,
-  `Current age in months: ${pluralize(totalMonths, "month")}`,
-  `Current age in years and months: ${formatYearsAndMonths(age)}`,
-  `Current age full: ${formatAge(age)}`,
-  `Next milestone: age ${nextMilestone.age} on ${formatDateOnly(nextMilestone.date)}`,
-  `Next milestone is ${pluralize(daysUntilMilestone, "day")} away`,
-].join("\n");
-
-process.stdout.write(`${message}\n`);
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) process.stdout.write(buildMessage());

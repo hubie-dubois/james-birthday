@@ -1,14 +1,10 @@
 import { readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { SECOND, MINUTE, HOUR, DAY, WEEK, addUtcYears, getAgeParts, clamp, pluralize, formatAge, formatClock, formatCompactCountdown, createModel, getSnapshot } from "../age-core.mjs";
 
 const dataPath = fileURLToPath(new URL("../shortcut-data.json", import.meta.url));
 const data = JSON.parse(await readFile(dataPath, "utf8"));
 
-const SECOND = 1000;
-const MINUTE = 60 * SECOND;
-const HOUR = 60 * MINUTE;
-const DAY = 24 * HOUR;
-const WEEK = 7 * DAY;
 const WIDTH = 78;
 const ESC = "\u001B";
 const BEL = "\u0007";
@@ -27,13 +23,11 @@ const theme = {
   text: rgb(244, 239, 230),
 };
 
-const numberFormatter = new Intl.NumberFormat("en-US");
-const timezone = data.referenceTimezone || "America/Chicago";
-const birthDate = parseDate(data.birthIso, "birthIso");
-const adulthoodDate = data.adulthoodIso
-  ? parseDate(data.adulthoodIso, "adulthoodIso")
-  : addUtcYears(birthDate, data.adulthoodYears);
-const milestoneYears = data.milestoneYears || data.milestones.map(({ age }) => age);
+const model = createModel(data);
+const timezone = data.referenceTimezone;
+const birthDate = model.birth;
+const adulthoodDate = model.adulthood;
+const milestoneYears = data.milestoneYears;
 
 function rgb(red, green, blue) {
   return `${ESC}[38;2;${red};${green};${blue}m`;
@@ -79,110 +73,8 @@ function padAnsiRight(text, width) {
   return `${text}${" ".repeat(Math.max(width - visibleLength(text), 0))}`;
 }
 
-function parseDate(value, fieldName) {
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    throw new Error(`Invalid ${fieldName} in shortcut-data.json.`);
-  }
-
-  return date;
-}
-
-function daysInUtcMonth(year, monthIndex) {
-  return new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
-}
-
-function addUtcMonths(date, monthsToAdd) {
-  const absoluteMonths = date.getUTCFullYear() * 12 + date.getUTCMonth() + monthsToAdd;
-  const targetYear = Math.floor(absoluteMonths / 12);
-  const targetMonth = ((absoluteMonths % 12) + 12) % 12;
-  const targetDay = Math.min(date.getUTCDate(), daysInUtcMonth(targetYear, targetMonth));
-
-  return new Date(
-    Date.UTC(
-      targetYear,
-      targetMonth,
-      targetDay,
-      date.getUTCHours(),
-      date.getUTCMinutes(),
-      date.getUTCSeconds(),
-      date.getUTCMilliseconds()
-    )
-  );
-}
-
-function addUtcYears(date, yearsToAdd) {
-  return addUtcMonths(date, yearsToAdd * 12);
-}
-
-function getAgeParts(start, end) {
-  if (end < start) {
-    return null;
-  }
-
-  let years = end.getUTCFullYear() - start.getUTCFullYear();
-  let anchor = addUtcYears(start, years);
-
-  if (anchor > end) {
-    years -= 1;
-    anchor = addUtcYears(start, years);
-  }
-
-  let months =
-    (end.getUTCFullYear() - anchor.getUTCFullYear()) * 12 +
-    (end.getUTCMonth() - anchor.getUTCMonth());
-  let monthAnchor = addUtcMonths(anchor, months);
-
-  if (monthAnchor > end) {
-    months -= 1;
-    monthAnchor = addUtcMonths(anchor, months);
-  }
-
-  let remainder = end.getTime() - monthAnchor.getTime();
-  const days = Math.floor(remainder / DAY);
-  remainder -= days * DAY;
-  const hours = Math.floor(remainder / HOUR);
-  remainder -= hours * HOUR;
-  const minutes = Math.floor(remainder / MINUTE);
-  remainder -= minutes * MINUTE;
-  const seconds = Math.floor(remainder / SECOND);
-
-  return { years, months, days, hours, minutes, seconds };
-}
-
 function getMilestoneDate(year) {
-  const storedMilestone = data.milestones?.find((milestone) => milestone.age === year);
-  return storedMilestone ? parseDate(storedMilestone.dateIso, `milestone ${year}`) : addUtcYears(birthDate, year);
-}
-
-function getNextMilestone(now) {
-  for (const year of milestoneYears) {
-    const date = getMilestoneDate(year);
-
-    if (date > now) {
-      return { age: year, date };
-    }
-  }
-
-  const finalAge = milestoneYears[milestoneYears.length - 1];
-  return { age: finalAge, date: getMilestoneDate(finalAge) };
-}
-
-function clamp(value, min, max) {
-  return Math.min(Math.max(value, min), max);
-}
-
-function pluralize(value, label) {
-  return `${numberFormatter.format(value)} ${label}${value === 1 ? "" : "s"}`;
-}
-
-function formatAge(parts) {
-  return `${pluralize(parts.years, "year")}, ${pluralize(parts.months, "month")}, ${pluralize(parts.days, "day")}`;
-}
-
-function formatClock(parts) {
-  return `${pluralize(parts.hours, "hour")}, ${pluralize(parts.minutes, "minute")}, ${pluralize(parts.seconds, "second")}`;
+  return model.milestones.find(milestone => milestone.age === year).date;
 }
 
 function formatDateOnly(date) {
@@ -204,29 +96,6 @@ function formatTimestamp(date) {
     timeZone: timezone,
     timeZoneName: "short",
   }).format(date);
-}
-
-function formatCompactCountdown(target, now) {
-  const diff = target.getTime() - now.getTime();
-
-  if (diff <= 0) {
-    return "right now";
-  }
-
-  const days = Math.floor(diff / DAY);
-  const hours = Math.floor((diff % DAY) / HOUR);
-  const minutes = Math.floor((diff % HOUR) / MINUTE);
-
-  if (days > 0) {
-    return `${pluralize(days, "day")}, ${pluralize(hours, "hour")}`;
-  }
-
-  if (hours > 0) {
-    return `${pluralize(hours, "hour")}, ${pluralize(minutes, "minute")}`;
-  }
-
-  const seconds = Math.floor((diff % MINUTE) / SECOND);
-  return `${pluralize(minutes, "minute")}, ${pluralize(seconds, "second")}`;
 }
 
 function progressBar(ratio, width = 38) {
@@ -267,7 +136,7 @@ function milestoneToken(year, now, nextMilestone) {
     return color(`${year}Y reached`, theme.green);
   }
 
-  if (year === nextMilestone.age) {
+  if (year === nextMilestone?.age) {
     return color(`${year}Y next`, theme.bold, theme.gold);
   }
 
@@ -292,8 +161,7 @@ function renderMilestones(now, nextMilestone) {
   return rows;
 }
 
-function buildDashboard() {
-  const now = new Date();
+export function buildDashboard(now = new Date()) {
   const age = getAgeParts(birthDate, now);
   const output = [`${ESC}]0;${data.name} Right Now${BEL}${topBorder()}`];
 
@@ -328,7 +196,7 @@ function buildDashboard() {
   const nextBirthdayAge = age.years + 1;
   const currentBirthdayDate = addUtcYears(birthDate, age.years);
   const nextBirthdayDate = addUtcYears(birthDate, nextBirthdayAge);
-  const nextMilestone = getNextMilestone(now);
+  const { nextMilestone } = getSnapshot(model, now);
   const progressToAdulthood = clamp(totalMs / (adulthoodDate.getTime() - birthDate.getTime()), 0, 1);
   const progressToBirthday = clamp(
     (now.getTime() - currentBirthdayDate.getTime()) /
@@ -338,7 +206,7 @@ function buildDashboard() {
   );
 
   output.push(terminalLine(stat("Age", formatAge(age), theme.gold)));
-  output.push(terminalLine(stat("Clock detail", `${formatClock(age)} into this age snapshot`, theme.cyan)));
+  output.push(terminalLine(stat("Clock detail", formatClock(age), theme.cyan)));
   output.push(terminalLine(stat("Days alive", pluralize(totalDays, "day"), theme.green)));
   output.push(terminalLine(stat("Total months", pluralize(totalMonths, "month"), theme.orange)));
   output.push(terminalLine(stat("Total weeks", pluralize(totalWeeks, "week"), theme.soft)));
@@ -363,8 +231,12 @@ function buildDashboard() {
   output.push(separator());
   output.push(terminalLine(stat("Next birthday", `Age ${nextBirthdayAge} on ${formatDateOnly(nextBirthdayDate)}`, theme.gold)));
   output.push(terminalLine(stat("Birthday ETA", formatCompactCountdown(nextBirthdayDate, now), theme.cyan)));
-  output.push(terminalLine(stat("Next milestone", `Age ${nextMilestone.age} on ${formatDateOnly(nextMilestone.date)}`, theme.gold)));
-  output.push(terminalLine(stat("Milestone ETA", formatCompactCountdown(nextMilestone.date, now), theme.cyan)));
+  if (nextMilestone) {
+    output.push(terminalLine(stat("Next milestone", `Age ${nextMilestone.age} on ${formatDateOnly(nextMilestone.date)}`, theme.gold)));
+    output.push(terminalLine(stat("Milestone ETA", formatCompactCountdown(nextMilestone.date, now), theme.cyan)));
+  } else {
+    output.push(terminalLine(color("All planned milestones reached.", theme.bold, theme.green)));
+  }
   output.push(separator());
   output.push(terminalLine(color("MILESTONE RADAR", theme.bold, theme.gold)));
   output.push(...renderMilestones(now, nextMilestone));
@@ -380,4 +252,4 @@ function buildDashboard() {
   return `${output.join("\n")}\n${RESET}`;
 }
 
-process.stdout.write(buildDashboard());
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) process.stdout.write(buildDashboard());

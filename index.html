@@ -3,133 +3,92 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>James Right Now</title>
-    <meta
-      name="description"
-      content="A live single-page website tracking exactly how old James is right now."
-    />
-    <meta name="theme-color" content="#143642" />
+    <title>James Right Now — A little life, a big adventure.</title>
+    <meta name="description" content="A little keepsake for a life getting bigger. Follow James' age, birthdays, and the journey to eighteen, one second at a time." />
+    <meta name="theme-color" content="#f5f0e6" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="alternate" type="text/plain" title="James terminal update" href="terminal.txt" />
   </head>
   <body>
-    <div class="background" aria-hidden="true">
-      <div class="background-orb orb-one"></div>
-      <div class="background-orb orb-two"></div>
-      <div class="background-grid"></div>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="wordmark" href="#main" aria-label="James Right Now, home"><span class="wordmark-symbol" aria-hidden="true">j.</span><span>James<br /><span class="wordmark-small">RIGHT NOW</span></span></a>
+        <nav aria-label="Page navigation"><a href="#journey">The journey <span aria-hidden="true">↗</span></a><a href="#numbers">In numbers <span aria-hidden="true">↗</span></a></nav>
+        <span class="header-note">EST. JULY 2024</span>
+      </header>
+
+      <main id="main">
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span> A little keepsake, always growing</p>
+            <h1 id="hero-title">Little life.<br />Big <em>adventure.</em></h1>
+            <p class="hero-intro">The days are little. The moments are everything.<br class="desktop-break" /> Here’s James, right now.</p>
+            <div class="hero-timer">
+              <p class="timer-label">Officially this much James</p>
+              <p class="sr-only" id="ageSummary" role="timer">Age is loading.</p>
+              <div class="age-digits" aria-hidden="true">
+                <div><span id="ageYears">—</span><span class="age-unit">years</span></div>
+                <span class="age-divider">/</span>
+                <div><span id="ageMonths">—</span><span class="age-unit">months</span></div>
+                <span class="age-divider">/</span>
+                <div><span id="ageDays">—</span><span class="age-unit">days</span></div>
+              </div>
+              <p class="age-detail" id="ageDetail">The seconds are adding up…</p>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <p class="art-topline">ONE SMALL HUMAN. ONE GRAND ORBIT.</p>
+            <svg class="orbit-art" viewBox="0 0 500 470" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="sunLines" width="5" height="7" patternUnits="userSpaceOnUse"><path d="M0 3.5h5" stroke="#a94428" stroke-width=".7" opacity=".32" /></pattern>
+                <clipPath id="sunClip"><circle cx="250" cy="218" r="124" /></clipPath>
+              </defs>
+              <circle cx="250" cy="218" r="180" fill="none" stroke="#b8b6a0" stroke-width="1" stroke-dasharray="2 7" />
+              <circle cx="250" cy="218" r="124" fill="#e99358" />
+              <path d="M110 228h280v124H110z" fill="url(#sunLines)" clip-path="url(#sunClip)" />
+              <path d="M77 294c-52-39 15-120 150-181S486 42 492 79" transform="rotate(13 250 218)" fill="none" stroke="#355746" stroke-width="1.5" />
+              <ellipse cx="250" cy="218" rx="225" ry="65" transform="rotate(-28 250 218)" fill="none" stroke="#355746" stroke-width="1.5" />
+              <circle cx="72" cy="308" r="27" fill="#244a3b" /><path d="M50 307c15-12 31-10 46-1M51 319c14-10 29-8 40-2" fill="none" stroke="#7d9278" stroke-width="1.3" />
+              <circle cx="389" cy="80" r="13" fill="#b75936" />
+              <circle cx="410" cy="340" r="6" fill="#c1ac66" />
+              <path d="m108 108 3 13 13 3-13 3-3 13-3-13-13-3 13-3Zm286 132 3 10 10 3-10 3-3 10-3-10-10-3 10-3ZM197 402l3 9 9 3-9 3-3 9-3-9-9-3 9-3Z" fill="#244a3b" />
+              <path d="m173 39 2 6 6 2-6 2-2 6-2-6-6-2 6-2ZM435 171l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" fill="#b75936" />
+              <circle cx="260" cy="27" r="2" fill="#244a3b" /><circle cx="52" cy="208" r="2" fill="#244a3b" /><circle cx="330" cy="393" r="2" fill="#244a3b" />
+              <path d="M223 207v10m55-10v10" stroke="#593b2a" stroke-width="5" stroke-linecap="round" /><path d="M239 234q12 12 24 0" fill="none" stroke="#593b2a" stroke-width="3" stroke-linecap="round" />
+            </svg>
+            <div class="art-caption"><span class="caption-star">✳</span><p>Around the sun,<br /><em>and into our hearts.</em></p><span class="caption-number">∞<br /><span>POSSIBILITIES</span></span></div>
+          </div>
+        </section>
+
+        <div class="birth-strip"><span class="eyebrow">And so it began</span><p><time datetime="2024-07-24T11:41:00-05:00">July 24, 2024 <span aria-hidden="true">·</span> 11:41 AM</time> <span class="birth-zone">Champaign, IL time</span></p><span class="strip-star" aria-hidden="true">✳</span></div>
+
+        <section class="stats-grid" aria-label="A few little big numbers">
+          <article class="stat-card stat-card-earth"><div class="card-heading"><h2 class="stat-label">Days on Earth</h2><span class="card-icon" aria-hidden="true">↗</span></div><p class="stat-value" id="daysAlive">—</p><p class="stat-copy">Whole days of being James.<br />An entire world of possibilities.</p><span class="earth-lines" aria-hidden="true"></span></article>
+          <article class="stat-card stat-card-birthday"><div class="card-heading"><h2 class="stat-label">Next trip around the sun</h2><span class="card-icon" aria-hidden="true">✳</span></div><p class="stat-value birthday-date" id="nextBirthdayDate">—</p><p class="stat-copy" id="nextBirthdayCountdown">Counting down to cake…</p><div class="birthday-stub"><span>MAKE A WISH</span><span>TURNING <strong id="birthdayAge">—</strong></span></div></article>
+          <article class="stat-card stat-card-adult"><div class="card-heading"><h2 class="stat-label">The road to eighteen</h2><span class="card-icon" aria-hidden="true">↗</span></div><p class="stat-value" id="daysToAdult">—</p><p class="stat-copy" id="adultCountdown">Days until the next big chapter.</p><span class="adult-note">SO MUCH GOOD STUFF AHEAD.</span></article>
+        </section>
+
+        <section class="journey-section" id="journey" aria-labelledby="journey-title">
+          <div class="journey-intro"><p class="eyebrow">01 / The journey</p><h2 id="journey-title">Growing up,<br /><em>little by little.</em></h2><p>From the very first hello to eighteen candles. A few markers along a very big adventure.</p><div class="progress-heading"><span>The way to 18</span><strong id="progressPercent">—</strong></div><div class="progress-track" role="progressbar" aria-label="Journey to age 18" aria-valuemin="0" aria-valuemax="100"><div class="progress-fill" id="lifeProgress"></div></div><p class="progress-copy" id="lifeProgressText">Every day is another small step.</p><div class="journey-flower" aria-hidden="true">✳</div></div>
+          <div class="milestone-list" id="milestoneList" aria-label="Birthday milestones"><p class="loading-note">The milestones are on their way…</p></div>
+        </section>
+
+        <section class="totals-section" id="numbers" aria-labelledby="numbers-title">
+          <div class="totals-heading"><div><p class="eyebrow">02 / In numbers</p><h2 id="numbers-title">It all <em>adds up.</em></h2></div><p>One life. So many ways to count it.<br />These are the whole units so far.</p></div>
+          <dl class="totals-grid">
+            <div class="total-item"><dt>Total months</dt><dd id="totalMonths">—</dd></div>
+            <div class="total-item"><dt>Total weeks</dt><dd id="totalWeeks">—</dd></div>
+            <div class="total-item"><dt>Total hours</dt><dd id="totalHours">—</dd></div>
+            <div class="total-item"><dt>Total minutes</dt><dd id="totalMinutes">—</dd></div>
+            <div class="total-item total-item-seconds"><dt><span class="live-dot" aria-hidden="true"></span> Total seconds</dt><dd id="totalSeconds">—</dd><span class="seconds-note">…and there goes another.</span></div>
+          </dl>
+        </section>
+      </main>
+
+      <footer class="site-footer"><a class="footer-brand" href="#main">James Right Now <span aria-hidden="true">✳</span></a><p>A little place to watch a big life unfold.</p><a class="terminal-link" href="terminal.txt">The plain-text edition <span aria-hidden="true">↗</span></a></footer>
     </div>
-
-    <main class="page-shell">
-      <section class="hero panel">
-        <div class="hero-copy">
-          <p class="eyebrow">James Right Now</p>
-          <p class="birth-note">Born July 24, 2024 at 11:41 AM Central Time</p>
-          <h1>A living clock for James' first eighteen years.</h1>
-        </div>
-
-        <div class="hero-timer">
-          <p class="timer-label">Current age</p>
-          <p class="age-summary" id="ageSummary" role="timer">Calculating...</p>
-          <p class="age-detail" id="ageDetail">Loading the live counter.</p>
-        </div>
-      </section>
-
-      <section class="stats-grid" aria-label="Live age highlights">
-        <article class="panel stat-card stat-card-emphasis">
-          <p class="stat-label">Days on Earth</p>
-          <p class="stat-value" id="daysAlive">0</p>
-          <p class="stat-copy">Whole days completed since birth.</p>
-        </article>
-
-        <article class="panel stat-card">
-          <p class="stat-label">Next Birthday</p>
-          <p class="stat-value stat-value-small" id="nextBirthdayDate">July 24</p>
-          <p class="stat-copy" id="nextBirthdayCountdown">Calculating...</p>
-        </article>
-
-        <article class="panel stat-card">
-          <p class="stat-label">Countdown To 18</p>
-          <p class="stat-value" id="daysToAdult">0</p>
-          <p class="stat-copy" id="adultCountdown">Days remaining.</p>
-        </article>
-
-        <article class="panel stat-card">
-          <p class="stat-label">Reference Moment</p>
-          <p class="stat-value stat-value-small">11:41 AM local time</p>
-          <p class="stat-copy">Anchored to the real Chicago birth clock at UTC-05:00.</p>
-        </article>
-      </section>
-
-      <section class="content-grid">
-        <article class="panel progress-panel">
-          <div class="section-heading">
-            <p class="eyebrow">Journey To 18</p>
-            <h2>The long arc of the site.</h2>
-          </div>
-
-          <div class="progress-shell" aria-hidden="true">
-            <div class="progress-track">
-              <div class="progress-fill" id="lifeProgress"></div>
-            </div>
-          </div>
-
-          <p class="progress-copy" id="lifeProgressText">
-            Measuring James' progress from birth to adulthood.
-          </p>
-
-          <div class="milestone-list" id="milestoneList" aria-label="Milestones"></div>
-        </article>
-
-        <article class="panel totals-panel">
-          <div class="section-heading">
-            <p class="eyebrow">In The Numbers</p>
-            <h2>How that time adds up.</h2>
-          </div>
-
-          <div class="totals-grid">
-            <div class="total-item">
-              <p class="total-label">Total Months</p>
-              <p class="total-value" id="totalMonths">0</p>
-            </div>
-            <div class="total-item">
-              <p class="total-label">Total Weeks</p>
-              <p class="total-value" id="totalWeeks">0</p>
-            </div>
-            <div class="total-item">
-              <p class="total-label">Total Hours</p>
-              <p class="total-value" id="totalHours">0</p>
-            </div>
-            <div class="total-item">
-              <p class="total-label">Total Minutes</p>
-              <p class="total-value" id="totalMinutes">0</p>
-            </div>
-            <div class="total-item">
-              <p class="total-label">Total Seconds</p>
-              <p class="total-value" id="totalSeconds">0</p>
-            </div>
-            <div class="total-item">
-              <p class="total-label">Born</p>
-              <p class="total-value total-value-note">July 24, 2024</p>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <footer class="site-footer">
-        <p>
-          Built as a lightweight static page so the only thing that really has
-          to keep working is the browser clock.
-        </p>
-      </footer>
-    </main>
-
-    <noscript>
-      <div class="noscript-banner">
-        JavaScript is required for the live counter. James was born on July 24,
-        2024 at 11:41 AM Central Time.
-      </div>
-    </noscript>
-
-    <script src="script.js"></script>
+    <noscript><div class="noscript-banner">The live counters need JavaScript. James was born July 24, 2024 at 11:41 AM in Chicago (UTC−05:00).</div></noscript>
+    <script type="module" src="script.js"></script>
   </body>
 </html>
